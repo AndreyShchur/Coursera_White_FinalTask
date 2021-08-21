@@ -49,9 +49,10 @@ class DataBase
     void Add(stringstream &str)
     {
         int year, month, day;
-        char split1, split2;
+        char split1, split2, space;
         if ((str >> year >> split1 >> month >> split2 >> day) &&
-            (true == CheckSplits(split1, split2)))
+            (true == CheckSplits(split1, split2))             &&
+            (str.peek() == ' '))
         {
             year = abs(year);
             if (true == CheckMonth(month))
@@ -75,9 +76,10 @@ class DataBase
     void Del(stringstream &str)
     {
         int year, month, day;
-        char split1, split2;
+        char split1, split2, space;
         if ((str >> year >> split1 >> month >> split2 >> day) &&
-            (true == CheckSplits(split1, split2)))
+            (true == CheckSplits(split1, split2))             &&
+            (str.peek() == ' ' || str.peek() == '\n' || str.peek() == EOF))
         {
             year = abs(year);
             if (true == CheckMonth(month))
@@ -111,6 +113,7 @@ class DataBase
                     }
                     else
                     {
+                        bool date_is_not_del = true;
                         for (const auto &db : data_base)
                         {
                             if ((db.first.year == year)   &&
@@ -120,8 +123,13 @@ class DataBase
                                 int event_ctr = db.second.size();
                                 data_base.erase({year,month,day});
                                 cout << "Deleted " << event_ctr << " events" << endl;
+                                date_is_not_del = false;
                                 break;
                             }
+                        }
+                        if (date_is_not_del)
+                        {
+                            cout << "Deleted 0 events" << endl;
                         }
                     }
                 }
@@ -136,9 +144,10 @@ class DataBase
     void Find(stringstream &str)
     {
         int year, month, day;
-        char split1, split2;
+        char split1, split2, space;
         if ((str >> year >> split1 >> month >> split2 >> day) &&
-            (true == CheckSplits(split1, split2)))
+            (true == CheckSplits(split1, split2))             &&
+            (str.peek() == ' ' || str.peek() == '\n' || str.peek() == EOF))
         {
             year = abs(year);
             if (true == CheckMonth(month))
@@ -212,7 +221,7 @@ class DataBase
             }
         }
         
-        return "Error";
+        return date;
     }
     
     
